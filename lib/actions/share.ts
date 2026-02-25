@@ -104,36 +104,28 @@ export async function getProjectByShareToken(
   try {
     const supabase = await createClient();
 
-    // Chercher le projet par token
-    const { data: project, error: projectError } = await supabase
-      .from("projects")
-      .select("id, name, finance_snapshot")
-      .eq("share_token", token)
-      .single();
+    // Appeler la fonction SECURITY DEFINER qui bypass le RLS
+    // → fonctionne même sans session (navigation privée, lien partagé)
+    const { data, error } = await supabase.rpc("get_shared_project", {
+      p_token: token,
+    });
 
-    if (projectError || !project) {
+    if (error || !data) {
       return { success: false, error: "Lien invalide ou expiré" };
     }
 
-    // Charger le building config
-    const { data: configRow } = await supabase
-      .from("building_configs")
-      .select("params, derived")
-      .eq("project_id", project.id)
-      .order("created_at", { ascending: false })
-      .limit(1)
-      .single();
-
-    const buildingConfig = configRow
-      ? { params: configRow.params, derived: configRow.derived }
-      : null;
+    const result = data as {
+      project: { id: string; name: string };
+      snapshot: FinanceSnapshot | null;
+      building_config: { params: BuildingConfig["params"]; derived: BuildingConfig["derived"] } | null;
+    };
 
     return {
       success: true,
       data: {
-        project: { id: project.id, name: project.name },
-        snapshot: project.finance_snapshot as FinanceSnapshot | null,
-        buildingConfig: buildingConfig as BuildingConfig | null,
+        project: result.project,
+        snapshot: result.snapshot,
+        buildingConfig: result.building_config as BuildingConfig | null,
       },
     };
   } catch {
