@@ -82,12 +82,15 @@ export default function PricingAdminPage() {
           (s) => s.type === series.type && s.width === series.width,
         );
         if (globalIdx >= 0) {
-          next[globalIdx] = {
-            ...next[globalIdx],
-            entries: next[globalIdx].entries.map((e, i) =>
-              i === editCell.entryIdx ? { ...e, tarif: newTarif } : e,
-            ),
-          };
+          const current = next[globalIdx];
+          if (current) {
+            next[globalIdx] = {
+              ...current,
+              entries: current.entries.map((e, i) =>
+                i === editCell.entryIdx ? { ...e, tarif: newTarif } : e,
+              ),
+            };
+          }
         }
         return next;
       });
