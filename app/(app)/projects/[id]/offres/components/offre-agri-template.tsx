@@ -297,15 +297,33 @@ export function OffreAgriTemplate({ data, projectName, buildingConfig }: OffreAg
                 <strong>{data.gainNet30ans >= 0 ? "+" : ""}{formatK(data.gainNet30ans)}</strong> sur 30 ans.
               </p>
 
-              {data.downPayment > 0 && data.downPayment > data.reserveTotal && (
-                <div className="bg-white p-6 rounded-2xl shadow-lg border-2 border-emerald-300 text-gray-800">
-                  <p className="font-bold text-emerald-700 text-lg">💡 Astuce optimisation apport</p>
-                  <p className="text-sm mt-3 leading-relaxed">
-                    Vous disposez d&apos;un apport de <strong>{formatEUR(data.downPayment)}</strong> ? N&apos;utilisez pas tout pour le projet. Conservez{" "}
-                    <strong>{formatEUR(data.reserveTotal)}</strong> sur un Livret A pour couvrir les premières années et laissez le reste travailler intelligemment.
-                  </p>
-                </div>
-              )}
+              <div className="bg-white p-6 rounded-2xl shadow-lg border-2 border-emerald-300 text-gray-800">
+                <p className="font-bold text-emerald-700 text-lg">💡 Astuce optimisation apport</p>
+                <p className="text-sm mt-3 leading-relaxed">
+                  {data.downPayment > 0 && data.downPayment > data.reserveTotal ? (
+                    <>
+                      Vous disposez d&apos;un apport de <strong>{formatEUR(data.downPayment)}</strong> ? N&apos;utilisez pas tout pour le projet. Conservez{" "}
+                      <strong>{formatEUR(data.reserveTotal)}</strong> sur un Livret A pour couvrir les premières années et laissez le reste travailler intelligemment.
+                    </>
+                  ) : (
+                    <>
+                      Prévoyez simplement <strong>{formatEUR(data.reserveTotal)}</strong> de trésorerie de sécurité sur un Livret A pour couvrir les{" "}
+                      {data.nbAnneesDeficit} premières années. Après, le hangar s&apos;autofinance entièrement.
+                    </>
+                  )}
+                </p>
+              </div>
+
+              <div className="bg-white/20 backdrop-blur p-4 rounded-xl border border-white/30">
+                <p className="text-sm text-white/90">
+                  🤝 <strong>Financement trésorerie partenaire</strong>{" "}
+                  <span className="italic text-white/60">(à venir)</span>
+                </p>
+                <p className="text-xs mt-1 text-white/70">
+                  Vous ne disposez pas de cette réserve ? Un partenaire financier peut avancer
+                  les {formatEUR(data.reserveTotal)} pour vous. Contactez-nous pour en savoir plus.
+                </p>
+              </div>
             </>
           ) : (
             <>
