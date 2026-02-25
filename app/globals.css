@@ -24,3 +24,71 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+/*
+ * Fix drag carte Leaflet: les panes SVG Enedis (overlay, marker) sont TOUJOURS
+ * non-interactifs. Ça empêche les lignes/circles SVG d'intercepter mousemove/mouseup.
+ * Les panneaux HTML gardent pointer-events:auto sur les boutons/inputs enfants.
+ */
+.leaflet-overlay-pane,
+.leaflet-shadow-pane {
+  pointer-events: none !important;
+}
+
+/* Les panneaux HTML au-dessus de la carte : le conteneur laisse passer les clics
+   vers la carte, mais les éléments interactifs (boutons, inputs, labels) restent cliquables */
+[data-map-overlay] {
+  pointer-events: none;
+}
+[data-map-overlay] button,
+[data-map-overlay] input,
+[data-map-overlay] label,
+[data-map-overlay] a,
+[data-map-overlay] select {
+  pointer-events: auto;
+}
+
+/* Progress bar animation for parcelle loading — indeterminate slider */
+@keyframes progress-slide {
+  0% {
+    left: -40%;
+    width: 30%;
+  }
+  50% {
+    left: 50%;
+    width: 40%;
+  }
+  100% {
+    left: 110%;
+    width: 30%;
+  }
+}
+
+/* Le zoom control Leaflet : même principe */
+.leaflet-control-container {
+  pointer-events: none;
+}
+.leaflet-control-container .leaflet-control {
+  pointer-events: auto;
+}
+
+/* Routes IGN : inverser les couleurs (gris → blanc) et épaissir visuellement */
+.routes-layer-white {
+  filter: invert(1) brightness(3) contrast(2);
+}
+
+/* Badge "🔑 Proprio" sur les parcelles possédées */
+.owned-parcelle-tooltip {
+  background: #27ae60 !important;
+  color: #fff !important;
+  font-weight: 700 !important;
+  font-size: 11px !important;
+  border: 2px solid #fff !important;
+  border-radius: 4px !important;
+  padding: 2px 7px !important;
+  box-shadow: 0 1px 4px rgba(0,0,0,.4) !important;
+  white-space: nowrap !important;
+}
+.owned-parcelle-tooltip::before {
+  display: none !important;
+}

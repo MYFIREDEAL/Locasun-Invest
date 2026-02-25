@@ -32,6 +32,15 @@ yarn-error.log*
 
 # env files (can opt-in for committing if needed)
 .env*
+!.env.example
+
+# session / prompt notes
+PROMPT_*.md
+SESSION_*.md
+
+# temp test files
+finance-model.examples.js
+test-calepinage.js
 
 # vercel
 .vercel
